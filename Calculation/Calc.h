@@ -1,1 +1,6 @@
-#pragma once
+#include <iostream>
+class Calc
+{
+public:
+	void input();
+};
