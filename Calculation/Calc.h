@@ -1,6 +1,7 @@
 #include <iostream>
+#include <string>
 class Calc
 {
 public:
-	void input();
+	void input(std::string mass);
 };
