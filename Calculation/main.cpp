@@ -3,6 +3,6 @@
 int main()
 {
 	Calc test;
-	std::string prob = "9.1+2.8/3.14*5";
-	test.input(prob);
+	std::string prob = "(3*5.2+3)/(2.2-1.5)+6";
+	test.basic(prob);
 }

@@ -1,16 +1,18 @@
 #include <iostream>
 #include <string>
 #include <stack>
+#include <cstdlib>
 
 class Calc
 {
 public:
-	void input(std::string mass);
+	void basic(std::string mass);
 	void inputStack(char val);
 	void emptyStack();
-	std::string outSign();
+	void operation(int h);
 private:
 	std::stack <char> signs;
+	std::stack <std::string> all;
 	std::string temporary[10];
-	int n = 0,m = 0;
+	int n = 0;
 };
