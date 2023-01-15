@@ -2,7 +2,7 @@
 
  void Calc::basic(std::string mass)
 {
-	 double answer;
+	double answer;
 	std::string number = "";
 	int size,coll(1);
 	size = mass.length();
@@ -24,12 +24,10 @@
 		}
 		else
 		{
-			std::cout << "i:" << i << std::endl;
 			inputStack(mass[i]);
 			if (number != "")
 			{
 				out[coll] += number;
-				std::cout << "out:" << out[coll] << std::endl;
 				coll += 1;
 			}
 			if (n != 0)
@@ -37,7 +35,6 @@
 				for (int g = 0; g < n; g++)
 				{
 					out[coll] += temporary[g];
-					std::cout << "out:" << out[coll] << std::endl;
 					++coll;
 				}
 				n = 0;
@@ -58,10 +55,10 @@
 		}
 		n = 0;
 	}
-	for (int i = 0; i < coll; i++)
+	/*for (int i = 0; i < coll; i++)
 	{
 		std::cout << "out["<<i <<"]: " << out[i] << std::endl;
-	}
+	}*/
 	for (int i = 0; i < coll; i++)
 	{
 		if (out[i] == "+" )
