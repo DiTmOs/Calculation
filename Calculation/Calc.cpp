@@ -8,7 +8,7 @@
 	size = mass.length();
 	for (int i = 0; i < size; i++)
 	{
-		if (mass[i] == '+' || mass[i] == '-' || mass[i] == '/' || mass[i] == '*')
+		if (mass[i] == '+' || mass[i] == '-' || mass[i] == '/' || mass[i] == '*' || mass[i] == '^')
 		{
 			coll += 1;
 		}
@@ -18,7 +18,8 @@
 	coll = 0;
 	for (int i = 0; i <= size; i++)
 	{
-		if (mass[i] != '+' && mass[i] != '-' && mass[i] != '/' && mass[i] != '*' && mass[i] != '(' && mass[i] != ')')
+		std::cout << "i:"<< i << std::endl;
+		if (mass[i] != '+' && mass[i] != '-' && mass[i] != '/' && mass[i] != '*' && mass[i] != '(' && mass[i] != ')' && mass[i] != '^')
 		{
 			number += mass[i];
 		}
@@ -28,7 +29,7 @@
 			if (number != "")
 			{
 				out[coll] += number;
-				coll += 1;
+				++coll;
 			}
 			if (n != 0)
 			{
@@ -42,9 +43,12 @@
 			number = "";
 		}
 	}
-	out[coll] = number;
-	number = "";
-	++coll;
+	/*std::cout << number << std::endl;
+	if (number != "")
+	{
+		out[coll] += number;
+		++coll;
+	}*/
 	emptyStack();
 	if (n != 0)
 	{
@@ -55,31 +59,49 @@
 		}
 		n = 0;
 	}
-	/*for (int i = 0; i < coll; i++)
-	{
-		std::cout << "out["<<i <<"]: " << out[i] << std::endl;
-	}*/
 	for (int i = 0; i < coll; i++)
 	{
-		if (out[i] == "+" )
+		std::cout << "out["<<i <<"]: " << out[i] << std::endl;
+	}
+	int h = 0;
+	for (int i = 0; i < coll; i++)
+	{
+		if (out[i] != "")
 		{
-			operation(1);
-		}
-		else if (out[i] == "/")
-		{
-			operation(4);
-		}
-		else if (out[i] == "*")
-		{
-			operation(3);
-		}
-		else if (out[i] == "-")
-		{
-			operation(2);
-		}
-		else
-		{
-			all.push(out[i]);
+			if (out[i] == "+")
+			{
+				h = 1;
+				operation(h);
+			}
+			else if (out[i] == "/")
+			{
+				h = 4;
+				operation(h);
+			}
+			else if (out[i] == "*")
+			{
+				h = 3;
+				operation(h);
+			}
+			else if (out[i] == "-" && (out[i + 1] == "+" || out[i + 1] == "-" || out[i + 1] == "*" || out[i + 1] == "/" || out[i + 1] == "^"))
+			{
+				h = 7;
+				operation(h);
+			}
+			else if (out[i] == "-")
+			{
+				h = 2;
+				operation(h);
+			}
+			else if (out[i] == "^")
+			{
+				h = 5;
+				operation(h);
+			}
+			else
+			{
+				all.push(out[i]);
+			}
 		}
 	}
 	answer = stod(all.top());
@@ -93,17 +115,23 @@
 	 {
 		 if ((val == '+' || val == '-')&& (signs.top() != '(' ))
 		 {
-			 temporary[n] = signs.top();
-			 signs.pop();
+			 while (!signs.empty() && signs.top() != '(')
+			 {
+				 temporary[n] = signs.top();
+				 signs.pop();
+				 ++n;
+			 }
 			 signs.push(val);
-			 ++n;
 		 }
-		 else if ((val == '*' || val == '/') && (signs.top() == '*' || signs.top() == '/'))
+		 else if ((val == '*' || val == '/') && (signs.top() == '*' || signs.top() == '/') || signs.top() == '^')
 		 {
-			 temporary[n] = signs.top();
-			 signs.pop();
+			 while (!signs.empty() && signs.top() != '(' && (signs.top() != '-' || signs.top() != '+'))
+			 {
+				 temporary[n] = signs.top();
+				 signs.pop();
+				 ++n;
+			 }
 			 signs.push(val);
-			 ++n;
 		 }
 		 else if (val == ')')
 		 {
@@ -117,6 +145,15 @@
 		 }
 		 else if (val == '(')
 		 {
+			 signs.push(val);
+		 }
+		 else if (val == '^' && signs.top() == '^')
+		 {
+			 while (!signs.empty() && signs.top() == '^')
+			 {
+				 temporary[n++] = signs.top();
+				 signs.pop();
+			 }
 			 signs.push(val);
 		 }
 		 else
@@ -138,35 +175,65 @@
 		 signs.pop();
 	 }
  }
- void Calc::operation(int h)
+ void Calc::operation(int &h)
  {
 	 std::string temporary;
-	 double number1, number2,number;
+	 double number1, number2;
 	 if (!all.empty())
 	 {
-		 temporary = all.top();
-		 all.pop();
-		 number2 = stod(temporary);
-		 temporary = all.top();
-		 all.pop();
-		 number1 = stod(temporary);
+		 empty(number1, number2, temporary, h);
 		 if (h == 1)
 		 {
-			 number = number1 + number2;
+			 answer = number1 + number2;
 		 }
 		 else if (h == 2)
 		 {
-			 number = number1 - number2;
+			 answer = number1 - number2;
 		 }
 		 else if (h == 3)
 		 {
-			 number = number1 * number2;
+			 answer = number1 * number2;
 		 }
 		 else if (h == 4)
 		 {
-			 number = number1 / number2;
+			 answer = number1 / number2;
 		 }
-		 temporary = std::to_string(number);
+		 else if (h == 5)
+		 {
+			 if(number2 >= 1)
+			 answer = pow(number1, number2);
+			 else
+			 {
+				 std::cout << "Error(exponentiation is incorrect)!" << std::endl;
+				 exit(1);
+			 }
+		 }
+		 temporary = std::to_string(answer);
 		 all.push(temporary);
+	 }
+	 else
+	 {
+		 std::cout << "Error(empty stack!)" << std::endl;
+		 exit(1);
+	 }
+ }
+ void Calc::empty(double &num1,double &num2,std::string temp, int &h)
+ {
+	 if (all.size() > 1 && h !=7 )
+	 {
+		 temp = all.top();
+		 all.pop();
+		 num2 = stod(temp);
+		 temp = all.top();
+		 all.pop();
+		 num1 = stod(temp);
+	 }
+	 else if (!all.empty() && (all.size() == 1 || h == 7))
+	 {
+		 temp = all.top();
+		 all.pop();
+		 answer = stod(temp);
+		 answer *= -1;
+		 h = 0;
 	 }
  }
