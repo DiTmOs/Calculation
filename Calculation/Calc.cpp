@@ -2,7 +2,8 @@
 
  void Calc::basic(std::string mass)
 {
-	double answer;
+	double answer, temp;
+	int point(0);
 	std::string number = "";
 	int size,coll(1);
 	size = mass.length();
@@ -18,15 +19,26 @@
 	coll = 0;
 	for (int i = 0; i <= size; i++)
 	{
-		std::cout << "i:"<< i << std::endl;
 		if (mass[i] != '+' && mass[i] != '-' && mass[i] != '/' && mass[i] != '*' && mass[i] != '(' && mass[i] != ')' && mass[i] != '^')
 		{
 			number += mass[i];
 		}
 		else
 		{
-			inputStack(mass[i]);
-			if (number != "")
+			if (mass[i] == '(')
+				point = 1;
+			if (mass[i] == '-' && point == 1)
+				point = 2;
+			if (number != "" && point == 2)
+			{
+				temp = stod(number);
+				temp = temp * (-1);
+				number = std::to_string(temp);
+				out[coll] += number;
+				++coll;
+				point = 0;
+			}
+			else if(number != "")
 			{
 				out[coll] += number;
 				++coll;
@@ -40,6 +52,8 @@
 				}
 				n = 0;
 			}
+			if (point != 2)
+				inputStack(mass[i]);
 			number = "";
 		}
 	}
@@ -63,40 +77,13 @@
 	{
 		std::cout << "out["<<i <<"]: " << out[i] << std::endl;
 	}
-	int h = 0;
 	for (int i = 0; i < coll; i++)
 	{
 		if (out[i] != "")
 		{
-			if (out[i] == "+")
+			if (out[i] == "+" || out[i] == "-" || out[i] == "^" || out[i] == "*" || out[i] == "/")
 			{
-				h = 1;
-				operation(h);
-			}
-			else if (out[i] == "/")
-			{
-				h = 4;
-				operation(h);
-			}
-			else if (out[i] == "*")
-			{
-				h = 3;
-				operation(h);
-			}
-			else if (out[i] == "-" && (out[i + 1] == "+" || out[i + 1] == "-" || out[i + 1] == "*" || out[i + 1] == "/" || out[i + 1] == "^"))
-			{
-				h = 7;
-				operation(h);
-			}
-			else if (out[i] == "-")
-			{
-				h = 2;
-				operation(h);
-			}
-			else if (out[i] == "^")
-			{
-				h = 5;
-				operation(h);
+				operation(out[i]);
 			}
 			else
 			{
@@ -123,9 +110,9 @@
 			 }
 			 signs.push(val);
 		 }
-		 else if ((val == '*' || val == '/') && (signs.top() == '*' || signs.top() == '/') || signs.top() == '^')
+		 else if ((val == '*' || val == '/') && (signs.top() == '*' || signs.top() == '/' || signs.top() == '^'))
 		 {
-			 while (!signs.empty() && signs.top() != '(' && (signs.top() != '-' || signs.top() != '+'))
+			 while (!signs.empty() && signs.top() != '(' && signs.top() != '-' && signs.top() != '+')
 			 {
 				 temporary[n] = signs.top();
 				 signs.pop();
@@ -175,38 +162,32 @@
 		 signs.pop();
 	 }
  }
- void Calc::operation(int &h)
+ void Calc::operation(std::string sign)
  {
 	 std::string temporary;
 	 double number1, number2;
 	 if (!all.empty())
 	 {
-		 empty(number1, number2, temporary, h);
-		 if (h == 1)
+		 empty(number1, number2, temporary);
+		 if (sign == "+")
 		 {
 			 answer = number1 + number2;
 		 }
-		 else if (h == 2)
+		 else if (sign == "-")
 		 {
 			 answer = number1 - number2;
 		 }
-		 else if (h == 3)
+		 else if (sign == "*")
 		 {
 			 answer = number1 * number2;
 		 }
-		 else if (h == 4)
+		 else if (sign == "/")
 		 {
 			 answer = number1 / number2;
 		 }
-		 else if (h == 5)
+		 else if (sign == "^")
 		 {
-			 if(number2 >= 1)
 			 answer = pow(number1, number2);
-			 else
-			 {
-				 std::cout << "Error(exponentiation is incorrect)!" << std::endl;
-				 exit(1);
-			 }
 		 }
 		 temporary = std::to_string(answer);
 		 all.push(temporary);
@@ -217,9 +198,9 @@
 		 exit(1);
 	 }
  }
- void Calc::empty(double &num1,double &num2,std::string temp, int &h)
+ void Calc::empty(double &num1,double &num2,std::string temp)
  {
-	 if (all.size() > 1 && h !=7 )
+	 if (all.size() > 1)
 	 {
 		 temp = all.top();
 		 all.pop();
@@ -228,12 +209,9 @@
 		 all.pop();
 		 num1 = stod(temp);
 	 }
-	 else if (!all.empty() && (all.size() == 1 || h == 7))
+	 else 
 	 {
-		 temp = all.top();
-		 all.pop();
-		 answer = stod(temp);
-		 answer *= -1;
-		 h = 0;
+		 std::cout << "Error(There are less than 2 elements in the stack)!" << std::endl;
+		 exit(1);
 	 }
  }
