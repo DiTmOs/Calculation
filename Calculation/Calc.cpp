@@ -169,6 +169,14 @@
 	 if (!all.empty())
 	 {
 		 empty(number1, number2, temporary);
+		 /*switch (sign)
+		 {
+		 case sign == "+":
+			 answer = number1 + number2;
+			 break;
+		 default:
+			 break;
+		 }*/
 		 if (sign == "+")
 		 {
 			 answer = number1 + number2;
