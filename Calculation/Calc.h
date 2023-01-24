@@ -11,7 +11,10 @@ public:
 	void inputStack(char val);// Функция заноса в стек signs знака операции.
 	void emptyStack();//Функция проверки стека. Если он  не пуст, то выводит все элементы во временный массив temporary.
 	void empty(double &num1,double &num2, std::string temp);
-	void operation(std::string sign);//Функция выполнения операции.Достает из стека all два элемента и производит с ними операцию.
+	void operation(char sign);//Функция выполнения операции.Достает из стека all два элемента и производит с ними операцию.
+	int numberOFdigits(std::string massiv,int size);
+	bool isOperator(char element,bool type);
+	bool CheckingExpression(std::string expression);
 private:
 	std::stack <char> signs;
 	std::stack <std::string> all;
