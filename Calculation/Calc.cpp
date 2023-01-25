@@ -2,7 +2,7 @@
 #include <vector>
 #include <cctype>
 
- void Calc::basic(std::string mass)
+ void Calc::Calculation(std::string mass)
 {
 	double answer, temp;
 	int point(0);
@@ -15,7 +15,7 @@
 	coll = 0;
 	for (int i = 0; i <= size; i++)
 	{
-		if (!isOperator(mass[i],true))
+		if (!isOperator(mass[i]) && mass[i] != '(' && mass[i] != ')')
 		{
 			number += mass[i];
 		}
@@ -50,16 +50,16 @@
 				}
 				n = 0;
 			}
-			number = "";
+			number.clear();
+			//number = "";
 		}
 	}
-	/*std::cout << number << std::endl;
 	if (number != "")
 	{
 		out[coll] += number;
 		++coll;
-	}*/
-	emptyStack();
+	}
+	removingElements();
 	if (n != 0)
 	{
 		for (int g = 0; g < n; g++)
@@ -77,7 +77,7 @@
 	{
 		if (out[i] != "")
 		{
-			if (isOperator(out[i][0],false))
+			if (isOperator(out[i][0]))
 			{
 				operation(out[i][0]);
 			}
@@ -148,7 +148,7 @@
 		 signs.push(val);
 	 }
  }
- void Calc::emptyStack()
+ void Calc::removingElements()
  {
 	 while (!signs.empty())
 	 {
@@ -159,11 +159,10 @@
  }
  void Calc::operation(char sign)
  {
-	 std::string temporary;
 	 double number1, number2;
 	 if (!all.empty())
 	 {
-		 empty(number1, number2, temporary);
+		 GetValue(number1, number2);
 		 switch (sign)
 		 {
 			case '+':
@@ -182,8 +181,8 @@
 				 answer = pow(number1, number2);
 				 break;
 		 }
-		 temporary = std::to_string(answer);
-		 all.push(temporary);
+		 //temporary = std::to_string(answer);
+		 all.push(std::to_string(answer));
 	 }
 	 else
 	 {
@@ -191,17 +190,14 @@
 		 exit(1);
 	 }
  }
- void Calc::empty(double &num1,double &num2,std::string temp)
+ void Calc::GetValue(double &num1,double &num2)
  {
 	 if (all.size() > 1)
 	 {
-		 temp = all.top();
-		 
+		 num2 = stod(all.top());
 		 all.pop();
-		 num2 = stod(temp);
-		 temp = all.top();
+		 num1 = stod(all.top());
 		 all.pop();
-		 num1 = stod(temp);
 	 }
 	 else 
 	 {
@@ -209,7 +205,7 @@
 		 exit(1);
 	 }
  }
- int Calc::numberOFdigits(std::string massiv, int size)
+ int Calc::numberOFdigits(const std::string &massiv, int size)
  {
 	 int temp(0);
 	 for (int i = 0; i < size; i++)
@@ -227,40 +223,8 @@
 	 temp++;
 	 return temp;
  }
- bool Calc::isOperator(char element,bool type)
+ bool Calc::isOperator(char element)
  {
-	 if (type == true)
-	 {
-		 switch (element)
-		 {
-		 case '+':
-			 return true;
-			 break;
-		 case '-':
-			 return true;
-			 break;
-		 case '*':
-			 return true;
-			 break;
-		 case '/':
-			 return true;
-			 break;
-		 case '(':
-			 return true;
-			 break;
-		 case ')':
-			 return true;
-			 break;
-		 case '^':
-			 return true;
-			 break;
-		 default:
-			 return false;
-			 break;
-		 }
-	 }
-	 else
-	 {
 		 switch (element)
 		 {
 		 case '+':
@@ -282,7 +246,6 @@
 			 return false;
 			 break;
 		 }
-	 }
  }
  bool Calc::CheckingExpression(std::string expression)
  {

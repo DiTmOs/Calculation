@@ -7,13 +7,13 @@
 class Calc
 {
 public:
-	void basic(std::string mass);//Основной код программы. Происходит преобразование строки  в обратную польскую запись с последующим вычислением.
+	void Calculation(std::string mass);//Основной код программы. Происходит преобразование строки  в обратную польскую запись с последующим вычислением.
 	void inputStack(char val);// Функция заноса в стек signs знака операции.
-	void emptyStack();//Функция проверки стека. Если он  не пуст, то выводит все элементы во временный массив temporary.
-	void empty(double &num1,double &num2, std::string temp);
+	void removingElements();//Функция проверки стека. Если он  не пуст, то выводит все элементы во временный массив temporary.
+	void GetValue(double &num1,double &num2);
 	void operation(char sign);//Функция выполнения операции.Достает из стека all два элемента и производит с ними операцию.
-	int numberOFdigits(std::string massiv,int size);
-	bool isOperator(char element,bool type);
+	int numberOFdigits(const std::string &massiv,int size);
+	bool isOperator(char element);
 	bool CheckingExpression(std::string expression);
 private:
 	std::stack <char> signs;
