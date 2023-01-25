@@ -51,7 +51,6 @@
 				n = 0;
 			}
 			number.clear();
-			//number = "";
 		}
 	}
 	if (number != "")
@@ -181,7 +180,6 @@
 				 answer = pow(number1, number2);
 				 break;
 		 }
-		 //temporary = std::to_string(answer);
 		 all.push(std::to_string(answer));
 	 }
 	 else
